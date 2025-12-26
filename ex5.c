@@ -30,6 +30,12 @@ typedef struct TVShow {
     Season *seasons;
 } TVShow;
 
+//to read from user letter
+typedef struct Let {
+    char let;
+    struct Let * nextLet;
+} Let;
+
 TVShow ***database = NULL;
 int dbSize = 0;
 
@@ -163,15 +169,58 @@ char* getRequestType(int type){
 
 }
 
+
+Let * getLetPointer(int count){
+    char let;
+    int isRead = scanf("%c", &let);
+    //if read is successfull
+    if (isRead == EOF || let == '\n'){
+        return NULL;
+    }
+    //create a pointer
+    Let * ptr = (Let *)malloc(sizeof(Let));
+    if (ptr == NULL) exit(1); 
+    ptr->let = let;
+    ptr->nextLet = getLetPointer(count + 1);
+    return ptr;
+}
+
+int countLetters(Let* head, int count){
+    if (head == NULL){
+        return count;
+    }
+    return countLetters(head->nextLet, count + 1);
+}
+
+void getWord(Let * head, char * letPosition){
+    if (head == NULL){
+        *letPosition = '\0';
+        return;
+    }
+
+    *letPosition = head->let;
+    getWord(head->nextLet, letPosition + 1);
+}
+
+void freeLetters(Let* head){
+    if (head == NULL)
+        return;
+    freeLetters(head->nextLet);
+    //free current
+    free(head);
+}
+
 char * getNameFromUser(int requestType){
-    char tempBuffer[256];
     printf("Enter the name of the %s: \n", getRequestType(requestType));
-    scanf(" %[^\n]", tempBuffer);
-    char *name = (char * )malloc(strlen(tempBuffer) + 1);
+    //Read letters one by one
+    Let* letters = getLetPointer(0);
+    int count = countLetters(letters, 0);
+    char *name = (char * )malloc(count + 1);
     if (name == NULL){
         exit(1);
     }
-    strcpy(name, tempBuffer);
+    getWord(letters, name);
+    freeLetters(letters);
     return name;
 }
 
