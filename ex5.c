@@ -100,7 +100,7 @@ char* getEpisodeLength() {
     char tempBuffer[24];
     int valid = 0;
 
-    printf("Enter episode length (xx:xx:xx):\n");
+    printf("Enter the length (xx:xx:xx):\n");
     while (!valid) {
         scanf(" %[^\n]", tempBuffer); // Read until newline
 
@@ -670,7 +670,7 @@ void deleteEpisode(){
     Episode * episode = findEpisode(season->episodes, episodeName);
     free(episodeName);
     if (episode == NULL){
-        printf("episode not found.\n");
+        printf("Episode not found.\n");
         return;
     } 
 
