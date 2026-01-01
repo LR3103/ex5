@@ -144,7 +144,6 @@ int getPosition() {
             // If scanf returns 0, it means the user typed text (e.g., "abc")
             printf("Invalid! That is not a number.\n");
             
-            // CRITICAL: Clear the input buffer to prevent an infinite loop
             while (getchar() != '\n'); 
         }
     }
